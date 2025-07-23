@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+    nginx-service:
+      image: nginx:1.21
+      restart: always
+      tty: true
+      container_name: nginx-maintenance # can be any name
+      volumes:
+        - ./html:/usr/share/nginx/html
+        - ./conf:/etc/nginx/conf.d
+        - ./maintenance:/usr/share/nginx/html/maintenance
+        - ./maintenance/maintenance.html:/usr/share/nginx/html/maintenance.html
+      command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
+
+      ports: 
+        - '8883:80' #can be any port
